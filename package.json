@@ -1,32 +1,32 @@
 {
-    "name": "augmentedjs-service",
-    "version": "0.4.3",
-    "description": "The Augmented.js Framework Service Module.",
-    "main": "scripts/service/service.js",
-    "scripts": {
-        "test": "jasmine-node ./scripts/service/test --verbose"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Augmentedjs/augmented-service.git"
-    },
-    "keywords": [
-        "node",
-        "augmentedjs"
-    ],
-    "author": "Bob Warren <jedi.master@augmentedjs.com> (http://www.augmentedjs.com)",
-    "license": "Apache-2.0",
-    "dependencies": {
-        "augmentedjs": ">=0.4.3",
-        "xhr2": "*"
-    },
-    "devDependencies": {
-        "augmentedjs": ">=0.4.3",
-        "xhr2": "*",
-        "jasmine-node": "*"
-    },
-    "bugs": {
-        "url": "https://github.com/Augmentedjs/augmented-service/issues"
-    },
-    "homepage": "http://www.augmentedjs.com"
+  "name": "augmentedjs-service",
+  "version": "0.4.4",
+  "description": "The Augmented.js Framework Service Module.",
+  "main": "scripts/service/service.js",
+  "scripts": {
+    "test": "jasmine-node ./scripts/service/test --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Augmentedjs/augmented-service.git"
+  },
+  "keywords": [
+    "node",
+    "augmentedjs"
+  ],
+  "author": "Bob Warren <jedi.master@augmentedjs.com> (http://www.augmentedjs.com)",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "augmentedjs": ">=0.4.3",
+    "xhr2": "*"
+  },
+  "devDependencies": {
+    "augmentedjs": ">=0.4.3",
+    "xhr2": "*",
+    "jasmine-node": "*"
+  },
+  "bugs": {
+    "url": "https://github.com/Augmentedjs/augmented-service/issues"
+  },
+  "homepage": "http://www.augmentedjs.com"
 }
