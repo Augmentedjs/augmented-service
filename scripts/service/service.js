@@ -4,25 +4,33 @@
  * This extension adds:<br/>
  * <ul>
  * <li>DataSource</li>
+ * <li>Entity</li>
+ * <li>Resource</li>
  * </ul>
  *
  * @author Bob Warren
  *
  * @requires augmentedjs ("augmentedjs" in npm)
+ * @requires node
+ * @requires http
  * @module Augmented.Service
- * @version 0.4.3
+ * @version 0.4.4
  * @license Apache-2.0
  */
 (function(moduleFactory) {
-    if (typeof exports === 'object') {
-	    module.exports = moduleFactory(require('augmentedjs'));
-    } else if (typeof define === 'function' && define.amd) {
-	    define(['augmented'], moduleFactory);
+    if (typeof exports === "object") {
+	    module.exports = moduleFactory(require("augmentedjs"));
+    }
+    // AMD and Browser not supported, only Node
+    /*else if (typeof define === "function" && define.amd) {
+	    define(["augmented"], moduleFactory);
     } else {
 	    window.Augmented.Service = moduleFactory(window.Augmented.Service);
-    }
+    }*/
 }(function(Augmented) {
     "use strict";
+
+    var http = require("http");
 
     /**
      * The base namespece for all of the Service module.
@@ -36,7 +44,7 @@
      * @constant VERSION
      * @memberof Augmented.Service
      */
-    Augmented.Service.VERSION = "0.4.3";
+    Augmented.Service.VERSION = "0.4.4";
 
     /**
      * A private logger for use in the framework only
@@ -394,7 +402,7 @@
      */
     Augmented.Service.Collection = Augmented.Collection.extend({
         /**
-         * The query to use for the query - defaults to 'id' selection
+         * The query to use for the query - defaults to "id" selection
          * @method {any} query The query string to use for selection
          * @memberof Augmented.Service.Collection
          */
@@ -512,7 +520,7 @@
          * @memberof Augmented.Service.Collection
          */
         fetch: function(options) {
-            this.sync('read', options);
+            this.sync("read", options);
         },
         /**
          * @method save Save the entity
@@ -520,7 +528,7 @@
          * @memberof Augmented.Service.Collection
          */
         save: function(options) {
-            this.sync('create', options);
+            this.sync("create", options);
         },
         /**
          * @method update Update the entity
@@ -528,7 +536,7 @@
          * @memberof Augmented.Service.Collection
          */
         update: function(options) {
-            this.sync('update', options);
+            this.sync("update", options);
         },
         /**
          * @method destroy Destroy the entity
@@ -536,7 +544,7 @@
          * @memberof Augmented.Service.Collection
          */
         destroy: function(options) {
-            this.sync('delete', options);
+            this.sync("delete", options);
         }
     });
 
@@ -551,7 +559,7 @@
     Augmented.Service.Entity = Augmented.Model.extend({
         id: "",
         /**
-         * The query to use for the query - defaults to 'id' selection
+         * The query to use for the query - defaults to "id" selection
          * @method {any} query The query string to use for selection
          * @memberof Augmented.Service.Entity
          */
@@ -680,7 +688,7 @@
          * @memberof Augmented.Service.Entity
          */
         fetch: function(options) {
-            this.sync('read', options);
+            this.sync("read", options);
         },
         /**
          * @method save Save the entity
@@ -688,7 +696,7 @@
          * @memberof Augmented.Service.Entity
          */
         save: function(options) {
-            this.sync('create', options);
+            this.sync("create", options);
         },
         /**
          * @method update Update the entity
@@ -696,7 +704,7 @@
          * @memberof Augmented.Service.Entity
          */
         update: function(options) {
-            this.sync('update', options);
+            this.sync("update", options);
         },
         /**
          * @method destroy Destroy the entity
@@ -704,7 +712,122 @@
          * @memberof Augmented.Service.Entity
          */
         destroy: function(options) {
-            this.sync('delete', options);
+            this.sync("delete", options);
+        }
+    });
+
+    /**
+     * Resource class to handle REST from Node</br/>
+     * <em>Note: URL property is required</em>
+     *
+     * @constructor Augmented.Service.Resource
+     * @extends Augmented.Model
+     * @memberof Augmented.Service
+     */
+    Augmented.Service.Resource = Augmented.Model.extend({
+        id: "",
+        /**
+         * @property {string} url The url for the REST Service
+         * @memberof Augmented.Service.Resource
+         */
+        url: "",
+        /**
+         * @method initialize Initialize the model with needed wiring
+         * @param {object} options Any options to pass
+         * @memberof Augmented.Service.Resource
+         */
+        initialize: function(options) {
+            logger.log("initialize");
+            if (options && options.url) {
+                this.url = options.url;
+            }
+            // don't save this as data, but properties via the object base class options copy.
+            this.unset("url");
+            this.init(options);
+        },
+        /**
+         * @method init Custom init method for the model (called at inititlize)
+         * @param {object} options Any options to pass
+         * @memberof Augmented.Service.Resource
+         */
+        init: function(options) {},
+        /**
+         * @method fetch Fetch the Resource
+         * @param {object} options Any options to pass
+         * @memberof Augmented.Service.Resource
+         */
+        fetch: function(options) {
+            this.sync("read", options);
+        },
+        /**
+         * @method sync Sync method to handle REST functions for the model
+         * @param {string} method the operation to perform
+         * @param {object} options Any options to pass
+         * @memberof Augmented.Service.Resource
+         */
+        sync: function(method, options) {
+            logger.debug("sync " + method);
+            if (this.url) {
+                var that = this, success, error;
+                if (options && options.success && (typeof options.success === "function")) {
+                    success = options.success;
+                }
+                if (options && options.error && (typeof options.error === "function")) {
+                    error = options.error;
+                }
+
+                try {
+                    var j = {}, q, u = (typeof this.url === "function") ? this.url() : this.url;
+                    if (method === "create") {
+                        j = that.attributes;
+
+                    } else if (method === "update") {
+                        j = that.attributes;
+
+
+                    } else if (method === "delete") {
+
+                    } else {
+                        // read
+                        logger.debug("reading from " + u);
+                        logger.debug("have options? " + (options));
+
+                        http.get(u, function(res) {
+                            var body = ""; // Will contain the final response
+                            // Received data is a buffer.
+                            // Adding it to our body
+                            res.on("data", function(data){
+                                body += data;
+                            });
+                            // After the response is completed, parse it and log it to the console
+                            res.on("end", function() {
+                                var parsed = JSON.parse(body);
+                                logger.debug("Got data: " + body);
+                                that.set(parsed);
+                                logger.debug("now have options? " + (success));
+                                if (success) {
+                                    success();
+                                }
+                            });
+                        })
+                        // If any error has occured, log error to console
+                        .on("error", function(e, options) {
+                            logger.error("Got error: " + e.message);
+                            if (error) {
+                                error();
+                            }
+                        });
+                    }
+                } catch(e) {
+                    logger.error("Got exception: " + e);
+                    if (error) {
+                        error();
+                    }
+                }
+            } else {
+                logger.warn("no url");
+            }
+            return {};
         }
     });
 

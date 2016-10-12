@@ -4,7 +4,7 @@
     "description": "The Augmented.js Framework Service Module.",
     "main": "scripts/service/service.js",
     "scripts": {
-        "test": "jasmine-node ./scripts/service/test --color --verbose"
+        "test": "jasmine-node ./scripts/service/test --verbose"
     },
     "repository": {
         "type": "git",
@@ -17,11 +17,11 @@
     "author": "Bob Warren <jedi.master@augmentedjs.com> (http://www.augmentedjs.com)",
     "license": "Apache-2.0",
     "dependencies": {
-        "augmentedjs": "^0.4.3",
+        "augmentedjs": ">=0.4.3",
         "xhr2": "*"
     },
     "devDependencies": {
-        "augmentedjs": "*",
+        "augmentedjs": ">=0.4.3",
         "xhr2": "*",
         "jasmine-node": "*"
     },
