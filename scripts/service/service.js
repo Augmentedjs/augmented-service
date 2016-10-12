@@ -780,12 +780,91 @@
                     var j = {}, q, u = (typeof this.url === "function") ? this.url() : this.url;
                     if (method === "create") {
                         j = that.attributes;
+                        var options = {
+                            path: u,
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                            }
+                        };
+                        var req = http.request(options, function(res) {
+                            logger.debug("Status: " + res.statusCode);
+                            logger.debug("Headers: " + JSON.stringify(res.headers));
+                            res.setEncoding("utf8");
+                            res.on("data", function (body) {
+                                logger.debug("Body: " + body);
+                            });
+
+                            res.once("end", function() {
+                                if (success) {
+                                    success();
+                                }
+                            });
+                        });
+                        req.on("error", function(e) {
+                            logger.error("problem with request: " + e.message);
+                            if (error) {
+                                error(e);
+                            }
+                        });
+                        // write data to request body
+                        req.write(that.toJSON());
+                        req.end();
 
                     } else if (method === "update") {
                         j = that.attributes;
+                        var options = {
+                            path: u,
+                            method: "PUT",
+                            headers: {
+                              "Content-Type": "application/json",
+                            }
+                        };
+                        var req = http.request(options, function(res) {
+                            logger.debug("Status: " + res.statusCode);
+                            logger.debug("Headers: " + JSON.stringify(res.headers));
+                            res.setEncoding("utf8");
+                            res.on("data", function (body) {
+                                logger.debug("Body: " + body);
+                            });
 
+                            res.once("end", function() {
+                                if (success) {
+                                    success();
+                                }
+                            });
+                        });
+                        req.on("error", function(e) {
+                            logger.error("problem with request: " + e.message);
+                            if (error) {
+                                error(e);
+                            }
+                        });
+                        // write data to request body
+                        req.write(that.toJSON());
+                        req.end();
 
                     } else if (method === "delete") {
+                        var options = {
+                            path: u,
+                            method: "DELETE"
+                        };
+                        var req = http.request(options, function(res) {
+                            logger.debug("Status: " + res.statusCode);
+                            res.setEncoding("utf8");
+                            res.once("end", function() {
+                                if (success) {
+                                    success();
+                                }
+                            });
+                        });
+                        req.on("error", function(e) {
+                            logger.error("problem with request: " + e.message);
+                            if (error) {
+                                error(e);
+                            }
+                        });
+                        req.end();
 
                     } else {
                         // read
@@ -800,7 +879,7 @@
                                 body += data;
                             });
                             // After the response is completed, parse it and log it to the console
-                            res.on("end", function() {
+                            res.once("end", function() {
                                 var parsed = JSON.parse(body);
                                 logger.debug("Got data: " + body);
                                 that.set(parsed);
@@ -811,10 +890,10 @@
                             });
                         })
                         // If any error has occured, log error to console
-                        .on("error", function(e, options) {
+                        .once("error", function(e, options) {
                             logger.error("Got error: " + e.message);
                             if (error) {
-                                error();
+                                error(e);
                             }
                         });
                     }
