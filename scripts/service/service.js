@@ -199,11 +199,15 @@
                 this.collection.find(query).toArray(function(err, results) {
                     if(!err) {
                         logger.debug("Results: " + JSON.stringify(results));
+
+
                         if (results && results.length > 0) {
                             ret = results;
-                            if (callback) {
-                                callback(ret);
-                            }
+                        }
+                        if (callback) {
+                            callback(ret);
+                        } else {
+                            logger.debug("MongoDatasource, no callback");
                         }
                     } else {
                         logger.error(err);
@@ -659,6 +663,10 @@
 
                         logger.debug("query " + JSON.stringify(q));
                         this.datasource.query(q, function(data) {
+                            logger.debug("Did I even get here??");
+                            if (data === {}) {
+                                throw new Error("No Data Returned!");
+                            }
                             if (Array.isArray(data)) {
                                 that.reset(data[0]);
                             } else {
@@ -883,7 +891,7 @@
                                 var parsed = JSON.parse(body);
                                 logger.debug("Got data: " + body);
                                 that.set(parsed);
-                                logger.debug("now have options? " + (success));
+                                //logger.debug("now have options? " + (success));
                                 if (success) {
                                     success();
                                 }
