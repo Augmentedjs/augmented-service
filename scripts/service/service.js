@@ -14,7 +14,7 @@
  * @requires node
  * @requires http
  * @module Augmented.Service
- * @version 0.4.4
+ * @version 1.0.0 
  * @license Apache-2.0
  */
 (function(moduleFactory) {
@@ -44,7 +44,7 @@
      * @constant VERSION
      * @memberof Augmented.Service
      */
-    Augmented.Service.VERSION = "0.4.4";
+    Augmented.Service.VERSION = "1.0.0";
 
     /**
      * A private logger for use in the framework only

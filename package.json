@@ -1,6 +1,10 @@
 {
   "name": "augmentedjs-service",
+<<<<<<< HEAD
   "version": "0.4.5",
+=======
+  "version": "1.0.0",
+>>>>>>> 097f014b37320a6a8ad6c971f0d509f9f515199b
   "description": "The Augmented.js Framework Service Module.",
   "main": "scripts/service/service.js",
   "scripts": {
