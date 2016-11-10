@@ -422,7 +422,7 @@
          * @memberof Augmented.Service.Collection
          */
         initialize: function(options) {
-            logger.log("initialize");
+            //logger.log("initialize");
             if (options && options.datasource) {
                 this.datasource = options.datasource;
                 this.url = this.datasource.url;
@@ -579,7 +579,7 @@
          * @memberof Augmented.Service.Entity
          */
         initialize: function(options) {
-            logger.log("initialize");
+            //logger.log("initialize");
             if (options && options.datasource) {
                 this.datasource = options.datasource;
                 this.url = this.datasource.url;
@@ -745,7 +745,7 @@
          * @memberof Augmented.Service.Resource
          */
         initialize: function(options) {
-            logger.log("initialize");
+            //logger.log("initialize");
             if (options && options.url) {
                 this.url = options.url;
             }
