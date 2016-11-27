@@ -44,13 +44,31 @@
      * @constant VERSION
      * @memberof Augmented.Service
      */
-    Augmented.Service.VERSION = "0.4.4";
+    Augmented.Service.VERSION = "1.1.0";
 
     /**
      * A private logger for use in the framework only
      * @private
      */
-    var logger = Augmented.Logger.LoggerFactory.getLogger(Augmented.Logger.Type.console, Augmented.Configuration.LoggerLevel);
+    var _l = Augmented.Logger.LoggerFactory.getLogger(Augmented.Logger.Type.console, Augmented.Configuration.LoggerLevel);
+
+    var logger = {
+        "debug": function(message) {
+            _l.debug("SERVICE: " + message);
+        },
+        "info": function(message) {
+            _l.info("SERVICE: " + message);
+        },
+        "warn": function(message) {
+            _l.warn("SERVICE: " + message);
+        },
+        "error": function(message) {
+            _l.error("SERVICE: " + message);
+        },
+        "log": function(message) {
+            _l.log("SERVICE: " + message);
+        }
+    }
 
     /**
      * The datasource object for use as an interface for a datasource
@@ -119,6 +137,24 @@
          * @returns {object} Returns a value from the query or response code
          */
         this.query = function(query, callback) { return null; };
+
+        /**
+         * @method getCollection Get the collection
+         * @memberof Augmented.Service.DataSource
+         * @returns {object} Returns the collection
+         */
+        this.getCollection = function() {
+            return this.collection;
+        };
+
+        /**
+         * @method setCollection Set the collection by name
+         * @memberof Augmented.Service.DataSource
+         * @param {string} name The name of the collection
+         */
+        this.setCollection = function(name) {
+
+        };
     };
 
     Augmented.Service.MemoryDataSource = function(client) {
@@ -126,7 +162,9 @@
 
         this.getConnection = function(url, collection) {
             this.connected = true;
-            this.collection = collection;
+            if (collection) {
+                this.collection = collection;
+            }
             this.db = [];
             this.url = url;
             this.style = "array";
@@ -144,8 +182,6 @@
         this.insert = function(data) {
             this.db.put(data);
         };
-
-
     }
 
 
@@ -159,14 +195,28 @@
     Augmented.Service.MongoDataSource = function(client) {
         Augmented.Service.DataSource.call(this, client);
 
+        this.setCollection = function(name) {
+            logger.debug("setCollection: " + name);
+            if (name) {
+                logger.debug("collection: " + name);
+                this.collection = this.db.collection(name);
+            } else {
+                logger.debug("no collection");
+            }
+        };
+
         this.getConnection = function(url, collection) {
             this.connected = false;
             var that = this;
             if (this.client && !this.connected) {
                 this.client.connect(url, function(err, db) {
                     if(!err) {
-                        logger.debug("collection: " + collection);
-                        that.collection = db.collection(collection);
+                        if (collection) {
+                            logger.debug("getConnection: collection: " + collection);
+                            that.collection = db.collection(collection);
+                        } else {
+                            logger.debug("getConnection: no collection");
+                        }
                         that.db = db;
                         that.url = url;
                         that.connected = true;
@@ -406,6 +456,11 @@
      */
     Augmented.Service.Collection = Augmented.Collection.extend({
         /**
+         * Collection name for us in a datasource or an identifier
+         * @property {string} name The name of the collection
+         */
+        name: "collection",
+        /**
          * The query to use for the query - defaults to "id" selection
          * @method {any} query The query string to use for selection
          * @memberof Augmented.Service.Collection
@@ -422,16 +477,26 @@
          * @memberof Augmented.Service.Collection
          */
         initialize: function(options) {
-            //logger.log("initialize");
-            if (options && options.datasource) {
+            logger.debug("calling initialize with options: " + options);
+        
+            if (options.datasource) {
                 this.datasource = options.datasource;
-                this.url = this.datasource.url;
+            }
+            if (options.query) {
                 this.query = options.query;
             }
+            if (options.name) {
+                this.name = options.name;
+            }
+
+            this.url = (this.datasource) ? this.datasource.url : "";
+
+            this.setDataSourceCollection(this.name);
+
             this.init(options);
         },
         /**
-         * @method init Custom init method for the model (called at inititlize)
+         * @method init Custom init method for the model (called at initialize)
          * @param {object} options Any options to pass
          * @memberof Augmented.Service.Collection
          */
@@ -549,6 +614,14 @@
          */
         destroy: function(options) {
             this.sync("delete", options);
+        },
+        setDataSourceCollection: function(name) {
+            if (name) {
+                logger.debug("service: setting collection name");
+                this.name = name;
+                this.datasource.setCollection(name);
+            }
+
         }
     });
 
@@ -584,6 +657,9 @@
                 this.datasource = options.datasource;
                 this.url = this.datasource.url;
                 this.query = options.query;
+                if (options.collection) {
+                    this.datasource.setCollection(options.collection);
+                }
             }
             // don't save this as data, but properties via the object base class options copy.
             this.unset("datasource");
@@ -663,7 +739,7 @@
 
                         logger.debug("query " + JSON.stringify(q));
                         this.datasource.query(q, function(data) {
-                            logger.debug("Did I even get here??");
+                            //logger.debug("Did I even get here??");
                             if (data === {}) {
                                 throw new Error("No Data Returned!");
                             }
