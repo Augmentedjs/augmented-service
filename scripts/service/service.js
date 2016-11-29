@@ -14,7 +14,7 @@
  * @requires node
  * @requires http
  * @module Augmented.Service
- * @version 0.4.4
+ * @version 1.1.1
  * @license Apache-2.0
  */
 (function(moduleFactory) {
@@ -44,7 +44,7 @@
      * @constant VERSION
      * @memberof Augmented.Service
      */
-    Augmented.Service.VERSION = "1.1.0";
+    Augmented.Service.VERSION = "1.1.1";
 
     /**
      * A private logger for use in the framework only
@@ -250,8 +250,7 @@
                     if(!err) {
                         logger.debug("Results: " + JSON.stringify(results));
 
-
-                        if (results && results.length > 0) {
+                        if (results) {
                             ret = results;
                         }
                         if (callback) {
@@ -478,7 +477,7 @@
          */
         initialize: function(options) {
             logger.debug("calling initialize with options: " + options);
-        
+
             if (options.datasource) {
                 this.datasource = options.datasource;
             }
@@ -566,7 +565,7 @@
                         this.datasource.query(q, function(data) {
                             that.reset(data);
 
-                            logger.debug("returned: " + JSON.stringify(j));
+                            logger.debug("returned: " + JSON.stringify(data));
                             if (options && options.success && (typeof options.success === "function")) {
                                 options.success(data);
                             }
