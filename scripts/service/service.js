@@ -14,7 +14,7 @@
  * @requires node
  * @requires http
  * @module Augmented.Service
- * @version 1.1.1
+ * @version 1.1.2
  * @license Apache-2.0
  */
 (function(moduleFactory) {
@@ -44,7 +44,7 @@
      * @constant VERSION
      * @memberof Augmented.Service
      */
-    Augmented.Service.VERSION = "1.1.1";
+    Augmented.Service.VERSION = "1.1.2";
 
     /**
      * A private logger for use in the framework only
@@ -159,13 +159,15 @@
 
     Augmented.Service.MemoryDataSource = function(client) {
         Augmented.Service.DataSource.call(this, client);
+        this.style = "array";
+        this.db = [];
 
         this.getConnection = function(url, collection) {
             this.connected = true;
             if (collection) {
                 this.collection = collection;
             }
-            this.db = [];
+
             this.url = url;
             this.style = "array";
             return true;
@@ -180,8 +182,10 @@
         };
 
         this.insert = function(data) {
-            this.db.put(data);
+            this.db.push(data);
         };
+
+
     }
 
 
@@ -197,11 +201,11 @@
 
         this.setCollection = function(name) {
             logger.debug("setCollection: " + name);
-            if (name) {
+            if (name && Augmented.isString(name)) {
                 logger.debug("collection: " + name);
                 this.collection = this.db.collection(name);
             } else {
-                logger.debug("no collection");
+                logger.debug("no collection set");
             }
         };
 
@@ -441,6 +445,8 @@
                 return new Augmented.Service.MongoDataSource(client);
             } else if (type === "solr") {
                 return new Augmented.Service.SOLRDataSource(client);
+            } else if (type === "memory") {
+                return new Augmented.Service.MemoryDataSource(client);
             }
             return null;
         }
@@ -476,19 +482,26 @@
          * @memberof Augmented.Service.Collection
          */
         initialize: function(options) {
-            logger.debug("calling initialize with options: " + options);
+            if (options) {
+                logger.debug("calling initialize with options: " + JSON.stringify(options));
 
-            if (options.datasource) {
-                this.datasource = options.datasource;
-            }
-            if (options.query) {
-                this.query = options.query;
-            }
-            if (options.name) {
-                this.name = options.name;
-            }
+                if (options.datasource) {
+                    this.datasource = options.datasource;
+                }
+                if (options.query) {
+                    this.query = options.query;
+                }
+                if (options.name) {
+                    this.name = options.name;
+                }
 
-            this.url = (this.datasource) ? this.datasource.url : "";
+                if (options.url) {
+                    this.url = options.url;
+                }
+            }
+            if (this.datasource && (this.url === "")) {
+                this.url =  this.datasource.url;
+            }
 
             this.setDataSourceCollection(this.name);
 
@@ -615,12 +628,11 @@
             this.sync("delete", options);
         },
         setDataSourceCollection: function(name) {
-            if (name) {
-                logger.debug("service: setting collection name");
+            if (name && Augmented.isString(name) && this.datasource) {
+                logger.debug("service: setting collection name: " + name);
                 this.name = name;
                 this.datasource.setCollection(name);
             }
-
         }
     });
 
@@ -641,29 +653,47 @@
          */
         query: {},
         /**
-         * @property {string} url The url for the datasource (if applicable)
+         * @property {string|function} url The url for the datasource (if applicable)
          * @memberof Augmented.Service.Entity
          */
         url: "",
+        /**
+         * @property {string} collection The collection for the datasource (if applicable)
+         * @memberof Augmented.Service.Entity
+         */
+        collection:  "collection",
         /**
          * @method initialize Initialize the model with needed wireing
          * @param {object} options Any options to pass
          * @memberof Augmented.Service.Entity
          */
         initialize: function(options) {
-            //logger.log("initialize");
-            if (options && options.datasource) {
-                this.datasource = options.datasource;
-                this.url = this.datasource.url;
-                this.query = options.query;
+            if (options) {
                 if (options.collection) {
-                    this.datasource.setCollection(options.collection);
+                    this.collection = options.collection;
+                }
+                if (options.datasource) {
+                    this.datasource = options.datasource;
+                }
+                if (options.url) {
+                    this.url = this.datasource.url;
+                }
+                if (options.id) {
+                    this.id = options.id;
+                }
+                if (options.query) {
+                    this.query = options.query;
                 }
             }
             // don't save this as data, but properties via the object base class options copy.
             this.unset("datasource");
             this.unset("url");
             this.unset("query");
+            this.unset("collection");
+            this.unset("id");
+            if (this.datasource) {
+                this.datasource.setCollection(this.collection);
+            }
             this.init(options);
         },
         /**
