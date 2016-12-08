@@ -14,7 +14,7 @@
  * @requires node
  * @requires http
  * @module Augmented.Service
- * @version 1.2.0
+ * @version 1.3.0
  * @license Apache-2.0
  */
 (function(moduleFactory) {
@@ -44,7 +44,7 @@
      * @constant VERSION
      * @memberof Augmented.Service
      */
-    Augmented.Service.VERSION = "1.2.0";
+    Augmented.Service.VERSION = "1.3.0";
 
     /**
      * A private logger for use in the framework only
@@ -250,7 +250,12 @@
             var ret = {};
             if (this.collection && this.connected) {
                 logger.debug("The query: " + query);
-                this.collection.find(query).toArray(function(err, results) {
+                const myQuery = query;
+                if (Augmented.isFunction(query)) {
+                    myQuery = query();
+                }
+
+                this.collection.find(myQuery).toArray(function(err, results) {
                     if(!err) {
                         logger.debug("Results: " + JSON.stringify(results));
 
@@ -317,7 +322,13 @@
 
         this.update = function(query, data, callback) {
             if (this.collection && this.connected) {
-                this.collection.update(query, data, function(err, result) {
+                logger.debug("The query: " + query);
+                const myQuery = query;
+                if (Augmented.isFunction(query)) {
+                    myQuery = query();
+                }
+
+                this.collection.update(myQuery, data, function(err, result) {
                     if(!err) {
                         logger.debug("Result: " + JSON.stringify(result));
                     } else {
@@ -339,7 +350,11 @@
             var ret = {};
             if (this.collection && this.connected) {
                 logger.debug("The query: " + query);
-                this.collection.remove(query, function(err, results) {
+                const myQuery = query;
+                if (Augmented.isFunction(query)) {
+                    myQuery = query();
+                }
+                this.collection.remove(myQuery, function(err, results) {
                     if(!err) {
                         if (callback) {
                             callback();
@@ -804,9 +819,15 @@
                             q = that.query;
                         }
 
-                        logger.debug("query " + JSON.stringify(q));
-                        this.datasource.query(q, function(data) {
-                            //logger.debug("Did I even get here??");
+                        var myQuery = q;
+                        if (Augmented.isFunction(q)) {
+                            var x = q();
+                            logger.debug("x " + x);
+                            myQuery = x;
+                        }
+
+                        logger.debug("query " + JSON.stringify(myQuery));
+                        this.datasource.query(myQuery, function(data) {
                             if (data === {}) {
                                 throw new Error("No Data Returned!");
                             }
