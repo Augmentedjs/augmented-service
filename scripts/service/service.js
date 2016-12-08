@@ -44,7 +44,7 @@
      * @constant VERSION
      * @memberof Augmented.Service
      */
-    Augmented.Service.VERSION = "1.1.2";
+    Augmented.Service.VERSION = "1.2.0";
 
     /**
      * A private logger for use in the framework only
@@ -453,33 +453,63 @@
     };
 
     /**
-     * Collection class to handle ORM to a datasource</br/>
-     * <em>Note: Datasource property is required</em>
+     * Collection class to handle REST</br/>
      *
-     * @constructor Augmented.Service.Collection
+     * @constructor Augmented.Service.ResourceCollection
      * @memberof Augmented.Service
      */
-    Augmented.Service.Collection = Augmented.Collection.extend({
+    Augmented.Service.ResourceCollection = Augmented.Collection.extend({
         /**
          * Collection name for us in a datasource or an identifier
          * @property {string} name The name of the collection
+         * @memberof Augmented.Service.ResourceCollection
+         */
+        name: "collection",
+        /**
+         * @property {string} url The url for the datasource (if applicable)
+         * @memberof Augmented.Service.ResourceCollection
+         */
+        url: "",
+        /**
+         * @method setURL Set the url for the ResourceCollection
+         * @param {string|function} url The URL or a function to retun a URL object
+         * @memberof Augmented.Service.ResourceCollection
+         */
+        setURL: function(url) {
+            this.url = url;
+        },
+
+    });
+
+    /**
+     * Collection class to handle ORM to a datasource</br/>
+     * <em>Note: Datasource property is required</em>
+     *
+     * @constructor Augmented.Service.EntityCollection
+     * @memberof Augmented.Service
+     */
+    Augmented.Service.Collection = Augmented.Service.EntityCollection = Augmented.Collection.extend({
+        /**
+         * Collection name for us in a datasource or an identifier
+         * @property {string} name The name of the collection
+         * @memberof Augmented.Service.EntityCollection
          */
         name: "collection",
         /**
          * The query to use for the query - defaults to "id" selection
          * @method {any} query The query string to use for selection
-         * @memberof Augmented.Service.Collection
+         * @memberof Augmented.Service.EntityCollection
          */
         query: null,
         /**
          * @property {string} url The url for the datasource (if applicable)
-         * @memberof Augmented.Service.Collection
+         * @memberof Augmented.Service.EntityCollection
          */
         url: "",
         /**
          * @method initialize Initialize the model with needed wireing
          * @param {object} options Any options to pass
-         * @memberof Augmented.Service.Collection
+         * @memberof Augmented.Service.EntityCollection
          */
         initialize: function(options) {
             if (options) {
@@ -510,19 +540,27 @@
         /**
          * @method init Custom init method for the model (called at initialize)
          * @param {object} options Any options to pass
-         * @memberof Augmented.Service.Collection
+         * @memberof Augmented.Service.EntityCollection
          */
         init: function(options) {},
         /**
          * @property {Augmented.Service.DataSource} datasource Datasource instance
-         * @memberof Augmented.Service.Collection
+         * @memberof Augmented.Service.EntityCollection
          */
         datasource: null,
+        /**
+         * @method setDatasource Set the datasource for the Collection
+         * @param {object} datasource The datasource object
+         * @memberof Augmented.Service.EntityCollection
+         */
+        setDatasource: function(datasource) {
+            this.datasource = datasource;
+        },
         /**
          * @method sync Sync method to handle datasource functions for the Collection
          * @param {string} method the operation to perform
          * @param {object} options Any options to pass
-         * @memberof Augmented.Service.Collection
+         * @memberof Augmented.Service.EntityCollection
          */
         sync: function(method, options) {
             logger.debug("sync " + method);
@@ -598,7 +636,7 @@
         /**
          * @method fetch Fetch the entity
          * @param {object} options Any options to pass
-         * @memberof Augmented.Service.Collection
+         * @memberof Augmented.Service.EntityCollection
          */
         fetch: function(options) {
             this.sync("read", options);
@@ -606,7 +644,7 @@
         /**
          * @method save Save the entity
          * @param {object} options Any options to pass
-         * @memberof Augmented.Service.Collection
+         * @memberof Augmented.Service.EntityCollection
          */
         save: function(options) {
             this.sync("create", options);
@@ -614,7 +652,7 @@
         /**
          * @method update Update the entity
          * @param {object} options Any options to pass
-         * @memberof Augmented.Service.Collection
+         * @memberof Augmented.Service.EntityCollection
          */
         update: function(options) {
             this.sync("update", options);
@@ -622,7 +660,7 @@
         /**
          * @method destroy Destroy the entity
          * @param {object} options Any options to pass
-         * @memberof Augmented.Service.Collection
+         * @memberof Augmented.Service.EntityCollection
          */
         destroy: function(options) {
             this.sync("delete", options);
