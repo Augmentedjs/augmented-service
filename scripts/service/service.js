@@ -14,7 +14,7 @@
  * @requires node
  * @requires http
  * @module Augmented.Service
- * @version 1.1.2
+ * @version 1.2.0
  * @license Apache-2.0
  */
 (function(moduleFactory) {
