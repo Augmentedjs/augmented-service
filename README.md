@@ -1,7 +1,7 @@
 # Augmented.js Service Module
 ## The Augmented.js Framework.
-### Version 0.4.4
-### "-TBD-"
+### Version 1.3.x
+### "Typhoon"
 **aug·ment·ed**
 /ˌôɡˈmentəd /
 *adjective*
@@ -15,8 +15,8 @@ adjective: augmented
 The **Service** extension.
 
 This extension adds:
-* ORM style Entities
-* REST Resource class
+* ORM style Entities and Collections
+* REST Resource class and Collections
 * Abstract Datasource interface
   - MongoDB
   - SOLR (work in progress)
