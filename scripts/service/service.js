@@ -44,12 +44,65 @@
      * @constant VERSION
      * @memberof Augmented.Service
      */
-    Augmented.Service.VERSION = "1.3.0";
+    Augmented.Service.VERSION = "1.3.1";
+
+    /**
+     * A nice console logger with prefix for service messages
+     * @class Logger
+     * @memberof Augmented.Service
+     */
+    Augmented.Service.Logger = {
+        _logger: null,
+        _prefix: "SERVICE",
+        /**
+         * Set the prefix of the logger
+         * @method setPrefix
+         * @param {string} prefix The prefix for the logger message
+         * @memberof Augmented.Service.Logger
+         */
+        setPrefix: function(prefix) {
+          this._prefix = prefix;
+        },
+        log: function(message) {
+            this._logger.log(this._prefix + ": " + message);
+        },
+        info: function(message) {
+            this._logger.info(this._prefix + ": " + message);
+        },
+        debug: function(message) {
+            this._logger.debug(this._prefix + ": " + message);
+        },
+        warn: function(message) {
+            this._logger.warn(this._prefix + ": " + message);
+        },
+        error: function(message) {
+            this._logger.error(this._prefix + ": " + message);
+        },
+        /**
+         * Get an instance class of the service color logger
+         * @method getServiceLogger
+         * @param {Augmented.Logger.Level} level The logger level
+         * @param {string} prefix Optional prefix for the logger message
+         * @memberof Augmented.Service.Logger
+         */
+        getLogger: function(level, prefix) {
+            if (!level) {
+                level = Augmented.Logger.Level.info;
+            }
+            this._logger = Augmented.Logger.LoggerFactory.getLogger(
+                Augmented.Logger.Type.colorConsole, level);
+            if (prefix) {
+                    this.setPrefix(prefix);
+            }
+            return this;
+        }
+    };
 
     /**
      * A private logger for use in the framework only
      * @private
      */
+     /*
     var _l = Augmented.Logger.LoggerFactory.getLogger(Augmented.Logger.Type.console, Augmented.Configuration.LoggerLevel);
 
     var logger = {
@@ -69,6 +122,8 @@
             _l.log("SERVICE: " + message);
         }
     }
+    */
+    const logger = Augmented.Service.Logger.getLogger(Augmented.Configuration.LoggerLevel, "SERVICE");
 
     /**
      * The datasource object for use as an interface for a datasource
