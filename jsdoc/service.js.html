@@ -1,12 +1,105 @@
-/**
- * service.js - The Service Core Component<br/>
- * The <b>Service</b> extension adds extensive abilities to the service (Node.js) layer.<br/>
- * This extension adds:<br/>
- * <ul>
- * <li>DataSource</li>
- * <li>Entity</li>
- * <li>Resource</li>
- * </ul>
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Augmented.js Source: service.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cosmo.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Augmented.js</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="Augmented.Service.html">Augmented.Service</a></li><li><a href="Augmented.Service.DataSourceFactory.html">Augmented.Service.DataSourceFactory</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="Augmented.module_Service.html">Augmented.Service</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="Augmented.Service.Entity.html">Augmented.Service.Entity</a></li><li><a href="Augmented.Service.EntityCollection.html">Augmented.Service.EntityCollection</a></li><li><a href="Augmented.Service.Logger.html">Augmented.Service.Logger</a></li><li><a href="Augmented.Service.MongoDataSource.html">Augmented.Service.MongoDataSource</a></li><li><a href="Augmented.Service.Resource.html">Augmented.Service.Resource</a></li><li><a href="Augmented.Service.ResourceCollection.html">Augmented.Service.ResourceCollection</a></li><li><a href="Augmented.Service.SOLRDataSource.html">Augmented.Service.SOLRDataSource</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="interfaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Interfaces<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="Augmented.Service.DataSource.html">Augmented.Service.DataSource</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: service.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/**
+ * service.js - The Service Core Component&lt;br/>
+ * The &lt;b>Service&lt;/b> extension adds extensive abilities to the service (Node.js) layer.&lt;br/>
+ * This extension adds:&lt;br/>
+ * &lt;ul>
+ * &lt;li>DataSource&lt;/li>
+ * &lt;li>Entity&lt;/li>
+ * &lt;li>Resource&lt;/li>
+ * &lt;/ul>
  *
  * @author Bob Warren
  *
@@ -204,7 +297,7 @@
         };
 
         this.closeConnection = function() {
-            if (this.db && this.connected) {
+            if (this.db &amp;&amp; this.connected) {
                 this.connected = false;
                 this.db = null;
                 this.collection = null;
@@ -230,7 +323,7 @@
 
         this.setCollection = function(name) {
             logger.debug("setCollection: " + name);
-            if (name && Augmented.isString(name)) {
+            if (name &amp;&amp; Augmented.isString(name)) {
                 logger.debug("collection: " + name);
                 this.collection = this.db.collection(name);
             } else {
@@ -241,7 +334,7 @@
         this.getConnection = function(url, collection) {
             this.connected = false;
             var that = this;
-            if (this.client && !this.connected) {
+            if (this.client &amp;&amp; !this.connected) {
                 this.client.connect(url, function(err, db) {
                     if(!err) {
                         if (collection) {
@@ -267,7 +360,7 @@
         };
 
         this.closeConnection = function() {
-            if (this.db && this.connected) {
+            if (this.db &amp;&amp; this.connected) {
                 this.db.close();
                 this.connected = false;
                 this.db = null;
@@ -277,7 +370,7 @@
 
         this.query = function(query, callback) {
             var ret = {};
-            if (this.collection && this.connected) {
+            if (this.collection &amp;&amp; this.connected) {
                 logger.debug("The query: " + query);
                 const myQuery = query;
                 if (Augmented.isFunction(query)) {
@@ -310,7 +403,7 @@
 
         this.insert = function(data, callback) {
             var ret = {};
-            if (this.collection && this.connected) {
+            if (this.collection &amp;&amp; this.connected) {
                 if (Array.isArray(data)) {
                     this.collection.insertMany(data, function(err, result) {
                         if(!err) {
@@ -350,7 +443,7 @@
         };
 
         this.update = function(query, data, callback) {
-            if (this.collection && this.connected) {
+            if (this.collection &amp;&amp; this.connected) {
                 logger.debug("The query: " + query);
                 const myQuery = query;
                 if (Augmented.isFunction(query)) {
@@ -377,7 +470,7 @@
 
         this.remove = function(query, callback) {
             var ret = {};
-            if (this.collection && this.connected) {
+            if (this.collection &amp;&amp; this.connected) {
                 logger.debug("The query: " + query);
                 const myQuery = query;
                 if (Augmented.isFunction(query)) {
@@ -416,7 +509,7 @@
         this.getConnection = function(url, collection) {
             this.connected = false;
             var that = this;
-            if (this.client && !this.connected) {
+            if (this.client &amp;&amp; !this.connected) {
                 this.client.ping(function(err, db){
                    if(!err) {
                        logger.debug("collection: " + collection);
@@ -437,7 +530,7 @@
         };
 
         this.closeConnection = function() {
-            if (this.db && this.connected) {
+            if (this.db &amp;&amp; this.connected) {
                 this.connected = false;
                 this.db = null;
                 this.collection = null;
@@ -495,7 +588,7 @@
     };
 
     /**
-     * Collection class to handle REST</br/>
+     * Collection class to handle REST&lt;/br/>
      *
      * @constructor Augmented.Service.ResourceCollection
      * @memberof Augmented.Service
@@ -524,8 +617,8 @@
     });
 
     /**
-     * Collection class to handle ORM to a datasource</br/>
-     * <em>Note: Datasource property is required</em>
+     * Collection class to handle ORM to a datasource&lt;/br/>
+     * &lt;em>Note: Datasource property is required&lt;/em>
      *
      * @constructor Augmented.Service.EntityCollection
      * @memberof Augmented.Service
@@ -571,7 +664,7 @@
                     this.url = options.url;
                 }
             }
-            if (this.datasource && (this.url === "")) {
+            if (this.datasource &amp;&amp; (this.url === "")) {
                 this.url =  this.datasource.url;
             }
 
@@ -614,13 +707,13 @@
                         j = this.toJSON();
                         this.datasource.insert(j, function() {
                             that.reset(j);
-                            if (options && options.success && (typeof options.success === "function")) {
+                            if (options &amp;&amp; options.success &amp;&amp; (typeof options.success === "function")) {
                                 options.success();
                             }
                         });
                     } else if (method === "update") {
                         j = this.toJSON();
-                        if (options && options.query) {
+                        if (options &amp;&amp; options.query) {
                             q = options.query;
                         } else {
                             q = this.query;
@@ -628,19 +721,19 @@
 
                         this.datasource.update(q, j, function() {
                             //that.reset(j);
-                            if (options && options.success && (typeof options.success === "function")) {
+                            if (options &amp;&amp; options.success &amp;&amp; (typeof options.success === "function")) {
                                 options.success();
                             }
                         });
                     } else if (method === "delete") {
-                        if (options && options.query) {
+                        if (options &amp;&amp; options.query) {
                             q = options.query;
                         } else {
                             q = this.query;
                         }
                         this.datasource.remove(q, function() {
                             that.reset();
-                            if (options && options.success && (typeof options.success === "function")) {
+                            if (options &amp;&amp; options.success &amp;&amp; (typeof options.success === "function")) {
                                 options.success();
                             }
                         });
@@ -648,7 +741,7 @@
                         // read
                         logger.log("reading");
 
-                        if (options && options.query) {
+                        if (options &amp;&amp; options.query) {
                             q = options.query;
                         } else {
                             q = this.query;
@@ -659,13 +752,13 @@
                             that.reset(data);
 
                             logger.debug("returned: " + JSON.stringify(data));
-                            if (options && options.success && (typeof options.success === "function")) {
+                            if (options &amp;&amp; options.success &amp;&amp; (typeof options.success === "function")) {
                                 options.success(data);
                             }
                         });
                     }
                 } catch(e) {
-                    if (options && options.error && (typeof options.error === "function")) {
+                    if (options &amp;&amp; options.error &amp;&amp; (typeof options.error === "function")) {
                         options.error(e);
                     }
                     //throw(e);
@@ -708,7 +801,7 @@
             this.sync("delete", options);
         },
         setDataSourceCollection: function(name) {
-            if (name && Augmented.isString(name) && this.datasource) {
+            if (name &amp;&amp; Augmented.isString(name) &amp;&amp; this.datasource) {
                 logger.debug("service: setting collection name: " + name);
                 this.name = name;
                 this.datasource.setCollection(name);
@@ -717,8 +810,8 @@
     });
 
     /**
-     * Entity class to handle ORM to a datasource</br/>
-     * <em>Note: Datasource property is required</em>
+     * Entity class to handle ORM to a datasource&lt;/br/>
+     * &lt;em>Note: Datasource property is required&lt;/em>
      *
      * @constructor Augmented.Service.Entity
      * @extends Augmented.Model
@@ -803,7 +896,7 @@
                         j = that.attributes;
                         this.datasource.insert(j, function() {
                             that.reset(j);
-                            if (options && options.success && (typeof options.success === "function")) {
+                            if (options &amp;&amp; options.success &amp;&amp; (typeof options.success === "function")) {
                                 options.success();
                             }
                         });
@@ -812,7 +905,7 @@
 
                         //logger.debug("The object: " + JSON.stringify(j));
 
-                        if (options && options.query) {
+                        if (options &amp;&amp; options.query) {
                             q = options.query;
                         } else {
                             q = this.query;
@@ -820,19 +913,19 @@
 
                         this.datasource.update(q, j, function() {
                             //that.reset(j);
-                            if (options && options.success && (typeof options.success === "function")) {
+                            if (options &amp;&amp; options.success &amp;&amp; (typeof options.success === "function")) {
                                 options.success();
                             }
                         });
                     } else if (method === "delete") {
-                        if (options && options.query) {
+                        if (options &amp;&amp; options.query) {
                             q = options.query;
                         } else {
                             q = this.query;
                         }
                         this.datasource.remove(q, function() {
                             that.reset();
-                            if (options && options.success && (typeof options.success === "function")) {
+                            if (options &amp;&amp; options.success &amp;&amp; (typeof options.success === "function")) {
                                 options.success();
                             }
                         });
@@ -840,7 +933,7 @@
                         // read
                         logger.debug("reading");
 
-                        if (options && options.query) {
+                        if (options &amp;&amp; options.query) {
                             q = options.query;
                         } else {
                             q = that.query;
@@ -858,22 +951,22 @@
                             if (data === null) {
                                 throw new Error("No Data Returned!");
                             }
-                            if (Array.isArray(data) && data.length > 0) {
+                            if (Array.isArray(data) &amp;&amp; data.length > 0) {
                                 that.reset(data[0]);
-                            } else if (Array.isArray(data) && data.length === 0) {
+                            } else if (Array.isArray(data) &amp;&amp; data.length === 0) {
                                 that.reset();
                             } else {
                                 that.reset(data);
                             }
 
                             logger.debug("returned: " + JSON.stringify(data));
-                            if (options && options.success && (typeof options.success === "function")) {
+                            if (options &amp;&amp; options.success &amp;&amp; (typeof options.success === "function")) {
                                 options.success(data);
                             }
                         });
                     }
                 } catch(e) {
-                    if (options && options.error && (typeof options.error === "function")) {
+                    if (options &amp;&amp; options.error &amp;&amp; (typeof options.error === "function")) {
                         options.error(e);
                     }
                     //throw(e);
@@ -918,8 +1011,8 @@
     });
 
     /**
-     * Resource class to handle REST from Node</br/>
-     * <em>Note: URL property is required</em>
+     * Resource class to handle REST from Node&lt;/br/>
+     * &lt;em>Note: URL property is required&lt;/em>
      *
      * @constructor Augmented.Service.Resource
      * @extends Augmented.Model
@@ -945,7 +1038,7 @@
          */
         initialize: function(options) {
             //logger.log("initialize");
-            if (options && options.url) {
+            if (options &amp;&amp; options.url) {
                 this.url = options.url;
             }
             // don't save this as data, but properties via the object base class options copy.
@@ -976,10 +1069,10 @@
             logger.debug("sync " + method);
             if (this.url) {
                 var that = this, success, error;
-                if (options && options.success && (typeof options.success === "function")) {
+                if (options &amp;&amp; options.success &amp;&amp; (typeof options.success === "function")) {
                     success = options.success;
                 }
-                if (options && options.error && (typeof options.error === "function")) {
+                if (options &amp;&amp; options.error &amp;&amp; (typeof options.error === "function")) {
                     error = options.error;
                 }
 
@@ -1097,7 +1190,7 @@
                             });
                             // After the response is completed, parse it and log it to the console
 
-                            if (res.statusCode >= 200 && res.statusCode < 300) {
+                            if (res.statusCode >= 200 &amp;&amp; res.statusCode &lt; 300) {
                                 res.once("end", function() {
                                     logger.debug("Got data: " + body);
                                     var parsed = {};
@@ -1144,3 +1237,136 @@
 
     return Augmented.Service;
 }));
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	
+		on Tue Jun 20th 2017
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>
