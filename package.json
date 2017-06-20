@@ -4,7 +4,8 @@
   "description": "The Augmented.js Framework Service Module.",
   "main": "scripts/service/service.js",
   "scripts": {
-    "test": "jasmine-node ./test --verbose"
+    "test": "jasmine-node ./test --verbose",
+    "docs": "jsdoc ./service.js -d ./jsdoc/ -R ./README.md -t ./node_modules/ink-docstrap/template/ -c ./jsdoc.conf.json"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,9 @@
     "xhr2": "*"
   },
   "devDependencies": {
-    "jasmine-node": "*"
+    "jasmine-node": "*",
+    "jsdoc": "*",
+    "ink-docstrap": "*"
   },
   "bugs": {
     "url": "https://github.com/Augmentedjs/augmented-service/issues"
