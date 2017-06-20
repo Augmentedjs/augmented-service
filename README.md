@@ -1,6 +1,6 @@
 # Augmented.js Service Module
 ## The Augmented.js Framework.
-### Version 1.3.x
+### Version 1.4.x
 ### "Typhoon"
 **aug·ment·ed**
 /ˌôɡˈmentəd /
