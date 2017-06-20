@@ -22,7 +22,7 @@
     "xhr2": "*"
   },
   "devDependencies": {
-    "jasmine-node": "*",
+    "jasmine-node": "^2.0.0",
     "jsdoc": "*",
     "ink-docstrap": "*"
   },

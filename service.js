@@ -15,7 +15,11 @@
  * @requires http
  * @requires https
  * @module Augmented.Service
+<<<<<<< HEAD:service.js
  * @version 1.4.0
+=======
+ * @version 1.3.2
+>>>>>>> bb295bd49b54b35ab0faca384ce2727b7c9f5e3c:scripts/service/service.js
  * @license Apache-2.0
  */
 (function(moduleFactory) {
@@ -40,7 +44,11 @@
      * @constant VERSION
      * @memberof Augmented.Service
      */
+<<<<<<< HEAD:service.js
     Augmented.Service.VERSION = "1.4.0";
+=======
+    Augmented.Service.VERSION = "1.3.2";
+>>>>>>> bb295bd49b54b35ab0faca384ce2727b7c9f5e3c:scripts/service/service.js
 
     /**
      * A nice console logger with prefix for service messages
@@ -217,7 +225,6 @@
 
 
     }
-
 
     /**
      * The MongoDB datasource instance class
@@ -404,7 +411,6 @@
     Augmented.Service.MongoDataSource.prototype = Object.create(Augmented.Service.DataSource.prototype);
     Augmented.Service.MongoDataSource.prototype.constructor = Augmented.Service.MongoDataSource;
 
-
     /**
      * The SOLR datasource instance class
      * @constructor SOLRDataSource
@@ -472,7 +478,6 @@
 
     Augmented.Service.SOLRDataSource.prototype = Object.create(Augmented.Service.DataSource.prototype);
     Augmented.Service.SOLRDataSource.prototype.constructor = Augmented.Service.SOLRDataSource;
-
 
     /**
      * The datasource factory to return an instance of a datasource configured by type
@@ -858,16 +863,18 @@
 
                         logger.debug("query " + JSON.stringify(myQuery));
                         this.datasource.query(myQuery, function(data) {
-                            if (data === {}) {
+                            if (data === null) {
                                 throw new Error("No Data Returned!");
                             }
-                            if (Array.isArray(data)) {
+                            if (Array.isArray(data) && data.length > 0) {
                                 that.reset(data[0]);
+                            } else if (Array.isArray(data) && data.length === 0) {
+                                that.reset();
                             } else {
                                 that.reset(data);
                             }
 
-                            logger.debug("returned: " + JSON.stringify(j));
+                            logger.debug("returned: " + JSON.stringify(data));
                             if (options && options.success && (typeof options.success === "function")) {
                                 options.success(data);
                             }
@@ -1007,14 +1014,14 @@
 
                             res.once("end", function() {
                                 if (success) {
-                                    success();
+                                    success(req.statusCode);
                                 }
                             });
                         });
                         req.on("error", function(e) {
                             logger.error("problem with request: " + e.message);
                             if (error) {
-                                error(e);
+                                error(500, e);
                             }
                         });
                         // write data to request body
@@ -1043,14 +1050,14 @@
 
                             res.once("end", function() {
                                 if (success) {
-                                    success();
+                                    success(req.statusCode, req.statusMessage);
                                 }
                             });
                         });
                         req.on("error", function(e) {
                             logger.error("problem with request: " + e.message);
                             if (error) {
-                                error(e);
+                                error(req.statusCode, e);
                             }
                         });
                         // write data to request body
@@ -1070,14 +1077,14 @@
                             res.setEncoding("utf8");
                             res.once("end", function() {
                                 if (success) {
-                                    success();
+                                    success(req.statusCode, req.statusMessage);
                                 }
                             });
                         });
                         req.on("error", function(e) {
                             logger.error("problem with request: " + e.message);
                             if (error) {
-                                error(e);
+                                error(500, e);
                             }
                         });
                         req.end();
@@ -1097,28 +1104,43 @@
                                 body += data;
                             });
                             // After the response is completed, parse it and log it to the console
-                            res.once("end", function() {
-                                var parsed = JSON.parse(body);
-                                logger.debug("Got data: " + body);
-                                that.set(parsed);
-                                //logger.debug("now have options? " + (success));
-                                if (success) {
-                                    success();
+
+                            if (res.statusCode >= 200 && res.statusCode < 300) {
+                                res.once("end", function() {
+                                    logger.debug("Got data: " + body);
+                                    var parsed = {};
+                                    try {
+                                         parsed = JSON.parse(body);
+                                         that.set(parsed);
+                                         if (success) {
+                                             success(res.statusCode, res.statusMessage);
+                                         }
+                                    } catch(e) {
+                                        logger.error("Not JSON response, can't add to resource.  Exception: " + e);
+                                        if (error) {
+                                            error(res.statusCode, e);
+                                        }
+                                    }
+                                });
+                            } else {
+                                logger.error("Unsuccessfull Fetch - " + res.statusCode + " " + res.statusMessage);
+                                if (error) {
+                                    error(res.statusCode, res.statusMessage);
                                 }
-                            });
+                            }
                         })
                         // If any error has occured, log error to console
                         .once("error", function(e, options) {
                             logger.error("Got error: " + e.message);
                             if (error) {
-                                error(e);
+                                error(500, e);
                             }
                         });
                     }
                 } catch(e) {
                     logger.error("Got exception: " + e);
                     if (error) {
-                        error();
+                        error(500, e);
                     }
                 }
             } else {
