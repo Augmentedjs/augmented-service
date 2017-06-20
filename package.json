@@ -1,8 +1,8 @@
 {
   "name": "augmentedjs-service",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "The Augmented.js Framework Service Module.",
-  "main": "scripts/service/service.js",
+  "main": "service.js",
   "scripts": {
     "test": "jasmine-node ./test --verbose",
     "docs": "jsdoc ./service.js -d ./jsdoc/ -R ./README.md -t ./node_modules/ink-docstrap/template/ -c ./jsdoc.conf.json"
