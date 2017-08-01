@@ -1,6 +1,6 @@
 {
   "name": "augmentedjs-service",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "The Augmented.js Framework Service Module.",
   "main": "service.js",
   "scripts": {
@@ -18,8 +18,8 @@
   "author": "Bob Warren <jedi.master@augmentedjs.com> (http://www.augmentedjs.com)",
   "license": "Apache-2.0",
   "dependencies": {
-    "augmentedjs": ">=1.4.0",
-    "xhr2": "*"
+    "augmentedjs": "^1.4.8",
+    "xhr2": "^0.1.4"
   },
   "devDependencies": {
     "jasmine-node": "^2.0.0",

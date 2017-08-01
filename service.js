@@ -15,7 +15,7 @@
  * @requires http
  * @requires https
  * @module Augmented.Service
- * @version 1.4.1
+ * @version 1.4.2
  * @license Apache-2.0
  */
 (function(moduleFactory) {
@@ -40,7 +40,7 @@
      * @constant VERSION
      * @memberof Augmented.Service
      */
-    Augmented.Service.VERSION = "1.4.1";
+    Augmented.Service.VERSION = "1.4.2";
 
     /**
      * A nice console logger with prefix for service messages
