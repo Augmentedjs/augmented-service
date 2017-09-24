@@ -1,6 +1,6 @@
 {
   "name": "augmentedjs-service",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "The Augmented.js Framework Service Module.",
   "main": "service.js",
   "scripts": {
@@ -18,13 +18,13 @@
   "author": "Bob Warren <jedi.master@augmentedjs.com> (http://www.augmentedjs.com)",
   "license": "Apache-2.0",
   "dependencies": {
-    "augmentedjs": "^1.4.8",
+    "augmentedjs": "^1.5.1",
     "xhr2": "^0.1.4"
   },
   "devDependencies": {
+    "ink-docstrap": "*",
     "jasmine-node": "^2.0.0",
-    "jsdoc": "*",
-    "ink-docstrap": "*"
+    "jsdoc": "^3.5.5"
   },
   "bugs": {
     "url": "https://github.com/Augmentedjs/augmented-service/issues"
