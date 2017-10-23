@@ -14,8 +14,9 @@
 * @requires node
 * @requires http
 * @requires https
+* @requires fs
 * @module Augmented.Service
-* @version 1.4.4
+* @version 1.5.0
 * @license Apache-2.0
 */
 (function(moduleFactory) {
@@ -27,6 +28,7 @@
 
   const http = require("http");
   const https = require("https");
+  const fs = require("fs");
 
   /**
   * The base namespece for all of the Service module.
@@ -40,16 +42,17 @@
   * @constant VERSION
   * @memberof Augmented.Service
   */
-  Augmented.Service.VERSION = "1.4.4";
+  Augmented.Service.VERSION = "1.5.0";
 
   /**
-  * A nice console logger with prefix for service messages
+  * A nice console and file logger with prefix for service messages
   * @class Logger
   * @memberof Augmented.Service
   */
   Augmented.Service.Logger = {
     _logger: null,
     _prefix: "SERVICE",
+    _path: "/var/log/service.log",
     /**
     * Set the prefix of the logger
     * @method setPrefix
@@ -61,27 +64,53 @@
     },
     log: function(message) {
       this._logger.log(this._prefix + ": " + message);
+      fs.appendFile(this._path, this._prefix + ": " + message, function(err) {
+        if (err) {
+          console.log("Error writing to log");
+        }
+      });
     },
     info: function(message) {
       this._logger.info(this._prefix + ": " + message);
+      fs.appendFile(this._path, this._prefix + ": " + message, function(err) {
+        if (err) {
+          console.log("Error writing to log");
+        }
+      });
     },
     debug: function(message) {
       this._logger.debug(this._prefix + ": " + message);
+      fs.appendFile(this._path, this._prefix + ": " + message, function(err) {
+        if (err) {
+          console.log("Error writing to log");
+        }
+      });
     },
     warn: function(message) {
       this._logger.warn(this._prefix + ": " + message);
+      fs.appendFile(this._path, this._prefix + ": " + message, function(err) {
+        if (err) {
+          console.log("Error writing to log");
+        }
+      });
     },
     error: function(message) {
       this._logger.error(this._prefix + ": " + message);
+      fs.appendFile(this._path, this._prefix + ": " + message, function(err) {
+        if (err) {
+          console.log("Error writing to log");
+        }
+      });
     },
     /**
     * Get an instance class of the service color logger
     * @method getServiceLogger
     * @param {Augmented.Logger.Level} level The logger level
     * @param {string} prefix Optional prefix for the logger message
+    * @param {string} path Optional path for the log file (defaults to /var/log/server.log)
     * @memberof Augmented.Service.Logger
     */
-    getLogger: function(level, prefix) {
+    getLogger: function(level, prefix, path) {
       if (!level) {
         level = Augmented.Logger.Level.info;
       }
@@ -89,6 +118,9 @@
         Augmented.Logger.Type.colorConsole, level);
         if (prefix) {
           this.setPrefix(prefix);
+        }
+        if (path) {
+          this._path = path;
         }
         return this;
       }
